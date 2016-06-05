@@ -7,10 +7,10 @@ RUN apt-get install -y python-psycopg2
 RUN mkdir /app
 WORKDIR /app
 
-ADD requirements.txt .
+ADD gillard/requirements.txt .
 RUN pip install -r requirements.txt
 
-ADD . ./
+ADD gillard/ ./
 
 ENTRYPOINT ["python"]
 CMD ["app.py"]

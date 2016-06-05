@@ -6,6 +6,7 @@
 
 - [ ] test infr
 - [ ] run tests in container
+- [ ] config env dev/test
 - [ ] test /health/
 - [ ] do /health/
 - [ ] test playlist model
