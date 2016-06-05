@@ -13,4 +13,4 @@ RUN pip install -r requirements.txt
 ADD gillard/ ./
 
 ENTRYPOINT ["python"]
-CMD ["app.py"]
+CMD ["gillard.py"]
