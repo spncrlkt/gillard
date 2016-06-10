@@ -1,18 +1,12 @@
-import os
 import gillard
-import unittest
+import test_utils
 
-class GillardTestCase(unittest.TestCase):
+class GillardTestCase(test_utils.GillardBaseTestCase):
 
-    def setUp(self):
-        gillard.app.config['TESTING'] = True
-        self.app = gillard.app.test_client()
-        with gillard.app.app_context():
-            gillard.create_db()
+    def test_index(self):
+        rv = self.app.get('/')
+        assert b'index' in rv.data
 
-    def tearDown(self):
-        os.close(self.db_fd)
-        os.unlink(flaskr.app.config['DATABASE'])
-
-if __name__ == '__main__':
-    unittest.main()
+    def test_health(self):
+        rv = self.app.get('/health')
+        assert b'OK' in rv.data

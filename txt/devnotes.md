@@ -55,6 +55,14 @@ redo backend to nginx/gunicorn/flask/postgres stack
   - played_at
   - created_at
 
+- Show
+  - showID: String,
+  - startDay: Number,
+  - startHour: Number,
+  - endDay: Number,
+  - endHour: Number,
+
+
 ## auth
 - dev only auth testing route
 - lock playlists through WP access
