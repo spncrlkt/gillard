@@ -21,7 +21,7 @@ class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     songs = relationship("Song")
     show_id = db.Column(db.Integer, db.ForeignKey('show.id'))
-    display_id = db.Column(db.Text)
+    display_id = db.Column(db.Text, index=True, unique=True)
     password = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
