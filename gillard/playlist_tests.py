@@ -65,6 +65,6 @@ class PlaylistTestCase(test_utils.GillardBaseTestCase):
                 gillard.db.session, playlist
             )
 
-            # on update, updated_at gets set to now-ish 
+            # on update, updated_at gets set to now-ish
             assert (datetime.datetime.now() - playlist.updated_at).\
                 total_seconds() < 2

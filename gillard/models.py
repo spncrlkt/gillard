@@ -40,6 +40,12 @@ class Show(db.Model):
     endDay = db.Column(db.Integer)
     endHour = db.Column(db.Integer)
 
+def update_played_at(context):
+    if context.current_parameters.get('played', False):
+        return datetime.datetime.now()
+    else:
+        return None
+
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artist = db.Column(db.Text)
@@ -53,3 +59,4 @@ class Song(db.Model):
     played = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
+    played_at = db.Column(db.DateTime, onupdate=update_played_at)

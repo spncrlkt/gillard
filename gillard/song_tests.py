@@ -43,3 +43,65 @@ class SongTestCase(test_utils.GillardBaseTestCase):
             assert song.img300px == 'img300px'
             assert song.played is True
 
+    def test_new_song_has_created_at(self):
+        with gillard.app.app_context():
+            song = Song()
+
+            song = test_utils.save_and_refresh(
+                gillard.db.session, song
+            )
+
+            assert \
+                (datetime.datetime.now() - song.created_at).\
+                total_seconds() < 2
+
+    def test_new_song_has_updated_at(self):
+        with gillard.app.app_context():
+            song = Song()
+
+            song = test_utils.save_and_refresh(
+                gillard.db.session, song
+            )
+
+            # updated_at starts empty
+            assert song.updated_at is None
+
+            song.artist = 'fake_ass_bullshit'
+
+            song = test_utils.save_and_refresh(
+                gillard.db.session, song
+            )
+
+            # on update, updated_at gets set to now-ish
+            assert (datetime.datetime.now() - song.updated_at).\
+                total_seconds() < 2
+
+    def test_new_song_has_played_at(self):
+        with gillard.app.app_context():
+            song = Song()
+
+            song = test_utils.save_and_refresh(
+                gillard.db.session, song
+            )
+
+            # played_at starts empty
+            assert song.played_at is None
+
+            song.artist = 'fake_ass_bullshit'
+
+            song = test_utils.save_and_refresh(
+                gillard.db.session, song
+            )
+
+            # played_at doesn't update unless 'played' changes
+            assert song.played_at is None
+
+            song.played = True
+
+            song = test_utils.save_and_refresh(
+                gillard.db.session, song
+            )
+
+            # on update played field, played_at gets set to now-ish
+            assert (datetime.datetime.now() - song.played_at).\
+                total_seconds() < 2
