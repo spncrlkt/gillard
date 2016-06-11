@@ -19,6 +19,7 @@ class User(db.Model):
 
 class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    songs = relationship("Song")
     show_id = db.Column(db.Integer, db.ForeignKey('show.id'))
     display_id = db.Column(db.Text)
     password = db.Column(db.Text)
@@ -48,6 +49,7 @@ def update_played_at(context):
 
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.id'))
     artist = db.Column(db.Text)
     title = db.Column(db.Text)
     album = db.Column(db.Text)
