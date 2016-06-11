@@ -4,7 +4,6 @@ from random import random
 import math
 
 from database import db
-from models import User
 
 app = Flask(__name__)
 
@@ -29,24 +28,6 @@ def hello_world():
 @app.route('/health')
 def health():
     return 'OK'
-
-@app.route('/create_user')
-def create_user():
-    rando = math.floor(random() * 100000)
-    username = 'buttnutt{}'.format(rando)
-    email = 'butt{}@nutt.org'.format(rando)
-    user = User(username, email)
-    db.session.add(user)
-    db.session.commit()
-    return 'created: {} {}'.format(username, email)
-
-@app.route('/dump_users')
-def dump_users():
-    users = User.query.all()
-    out = ''
-    for user in users:
-        out += '{}<br/>'.format(user.username)
-    return out
 
 def create_tables():
     db.create_all()
