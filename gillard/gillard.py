@@ -29,6 +29,10 @@ def hello_world():
 def health():
     return 'OK'
 
+@app.route('/playlist/new/<show_id>')
+def new_playlist(show_id):
+    return ''
+
 def create_tables():
     db.create_all()
     return 'created db tables'
