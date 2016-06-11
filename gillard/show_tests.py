@@ -16,17 +16,17 @@ class ShowTestCase(test_utils.GillardBaseTestCase):
     def test_show_attrs(self):
         with gillard.app.app_context():
             show = Show()
-            show.startDay = 0
-            show.startHour = 0
-            show.endDay = 0
-            show.endHour = 2
+            show.startDay = 2
+            show.startHour = 4
+            show.endDay = 6
+            show.endHour = 8
 
             show = test_utils.save_and_refresh(gillard.db.session, show)
 
-            assert show.startDay == 0
-            assert show.startHour == 0
-            assert show.endDay == 0
-            assert show.endHour == 2
+            assert show.startDay == 2
+            assert show.startHour == 4
+            assert show.endDay == 6
+            assert show.endHour == 8
 
     def test_new_show_has_no_playlists(self):
         with gillard.app.app_context():

@@ -22,7 +22,7 @@ class Playlist(db.Model):
     show_id = db.Column(db.Integer, db.ForeignKey('show.id'))
     display_id = db.Column(db.Text)
     password = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
 
     def __init__(self, **kwargs):
@@ -42,3 +42,14 @@ class Show(db.Model):
 
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    artist = db.Column(db.Text)
+    title = db.Column(db.Text)
+    album = db.Column(db.Text)
+    label = db.Column(db.Text)
+    release_date = db.Column(db.Text)
+    notes = db.Column(db.Text)
+    img64px = db.Column(db.Text)
+    img300px = db.Column(db.Text)
+    played = db.Column(db.Boolean)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
