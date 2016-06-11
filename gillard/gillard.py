@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from random import random
 import math
@@ -31,7 +31,10 @@ def health():
 
 @app.route('/playlist/new/<show_id>')
 def new_playlist(show_id):
-    return ''
+    return jsonify(
+        display_id='OK',
+        password='OK',
+    )
 
 def create_tables():
     db.create_all()
