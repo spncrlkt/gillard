@@ -7,7 +7,7 @@ class ShowTestCase(test_utils.GillardBaseTestCase):
 
     def test_mk_new_show(self):
         with gillard.app.app_context():
-            show = Show()
+            show = Show('TESTID')
 
             show = test_utils.save_and_refresh(gillard.db.session, show)
 
@@ -15,8 +15,7 @@ class ShowTestCase(test_utils.GillardBaseTestCase):
 
     def test_show_attrs(self):
         with gillard.app.app_context():
-            show = Show()
-            show.display_id = 'TEST_SHOWID'
+            show = Show('TESTID')
             show.startDay = 2
             show.startHour = 4
             show.endDay = 6
@@ -24,7 +23,7 @@ class ShowTestCase(test_utils.GillardBaseTestCase):
 
             show = test_utils.save_and_refresh(gillard.db.session, show)
 
-            assert show.display_id == 'TEST_SHOWID'
+            assert show.display_id == 'TESTID'
             assert show.startDay == 2
             assert show.startHour == 4
             assert show.endDay == 6
@@ -32,7 +31,7 @@ class ShowTestCase(test_utils.GillardBaseTestCase):
 
     def test_new_show_has_no_playlists(self):
         with gillard.app.app_context():
-            show = Show()
+            show = Show('TESTID')
 
             show = test_utils.save_and_refresh(gillard.db.session, show)
 
@@ -41,7 +40,7 @@ class ShowTestCase(test_utils.GillardBaseTestCase):
     def test_add_playlist_to_show(self):
         with gillard.app.app_context():
             playlist = Playlist()
-            show = Show()
+            show = Show('TESTID')
 
             show.playlists = [playlist]
 

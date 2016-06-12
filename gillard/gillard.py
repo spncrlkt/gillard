@@ -1,5 +1,8 @@
+import sys
+import traceback
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm.exc import NoResultFound
 from random import random
 import math
 
@@ -35,15 +38,18 @@ def health():
 
 @app.route('/playlist/new/<show_id>')
 def new_playlist(show_id):
+    try:
+        show = db.session.query(Show).filter_by(display_id=show_id).one()
+    except NoResultFound as ex:
+        raise InvalidUsage('No show found for id: {}'.format(show_id))
+
     playlist = Playlist()
     db.session.add(playlist)
     db.session.commit()
     playlist_id = playlist.id
     db.session.expunge_all()
+
     playlist = db.session.query(Playlist).filter_by(id=playlist_id).one()
-    # shows = db.session.query(Show).filter_by(display_id=show_id)
-    # import sys; print(dir(shows),file=sys.stderr)
-    raise ValueError('A very specific bad thing happened')
 
 
     return jsonify(
@@ -63,10 +69,14 @@ def drop_tables():
 def handle_invalid_usage(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
+    return response
 
 @app.errorhandler(Exception)
 def all_error_handler(error):
-    eprint(error)
+    eprint('\n**********')
+    eprint('\nUnhandled Exception')
+    traceback.print_exc(file=sys.stderr)
+    eprint('\n**********')
     return 'Error', 500
 
 if __name__ == '__main__':

@@ -30,6 +30,12 @@ class Show(db.Model):
     endDay = db.Column(db.Integer)
     endHour = db.Column(db.Integer)
 
+    def __init__(self, display_id, **kwargs):
+        # auto-generate password && display_id hashes
+        super(Show, self).__init__(**kwargs)
+        self.display_id = display_id
+
+
 def update_played_at(context):
     if context.current_parameters.get('played', False):
         return datetime.datetime.now()

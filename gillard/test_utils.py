@@ -1,6 +1,7 @@
 import unittest
 
 import gillard
+from models import Show
 
 def save_and_refresh(session, record):
     session.add(record)
@@ -9,6 +10,9 @@ def save_and_refresh(session, record):
     session.expunge_all()
     return session.query(type(record)).filter_by(id=record_id).one()
 
+def make_show(session, show_display_id):
+    show = Show(show_display_id)
+    return save_and_refresh(session, show)
 
 class GillardBaseTestCase(unittest.TestCase):
 
