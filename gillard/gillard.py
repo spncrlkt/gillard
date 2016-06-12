@@ -38,8 +38,8 @@ def new_playlist(show_id):
     db.session.commit()
 
     return jsonify(
-        display_id='FAKE',
-        password='FAKE',
+        display_id=playlist.display_id,
+        password=playlist.password,
     )
 
 def create_tables():
