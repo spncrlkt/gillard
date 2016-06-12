@@ -44,13 +44,9 @@ def new_playlist(show_id):
         raise InvalidUsage('No show found for id: {}'.format(show_id))
 
     playlist = Playlist()
+    show.playlists.append(playlist)
     db.session.add(playlist)
     db.session.commit()
-    playlist_id = playlist.id
-    db.session.expunge_all()
-
-    playlist = db.session.query(Playlist).filter_by(id=playlist_id).one()
-
 
     return jsonify(
         display_id=playlist.display_id,

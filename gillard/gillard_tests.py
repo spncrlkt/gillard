@@ -3,7 +3,7 @@ import json
 import gillard
 import test_utils
 
-from models import Playlist
+from models import Playlist, Show
 
 class GillardTestCase(test_utils.GillardBaseTestCase):
 
@@ -61,6 +61,59 @@ class GillardTestCase(test_utils.GillardBaseTestCase):
             playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
         assert playlist.display_id == res_json['display_id']
         assert playlist.password == res_json['password']
+
+    def test_new_playlist_associates_to_show(self):
+        show_id = 'TESTID'
+        with gillard.app.app_context():
+            test_utils.make_show(gillard.db.session, show_id)
+        rv = self.app.get('/playlist/new/{}'.format(show_id))
+        res_json = json.loads(rv.data.decode("utf-8"))
+
+        with gillard.app.app_context():
+            playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
+            show = gillard.db.session.query(Show).filter_by(id=1).one()
+            show_playlists = show.playlists
+
+        assert len(show_playlists) == 1
+
+        show_playlist = show_playlists[0]
+
+        assert playlist.id == show_playlist.id
+
+    def test_new_playlist_associates_to_show_2X(self):
+        show_id = 'TESTID'
+        with gillard.app.app_context():
+            test_utils.make_show(gillard.db.session, show_id)
+        rv = self.app.get('/playlist/new/{}'.format(show_id))
+        res_json = json.loads(rv.data.decode("utf-8"))
+
+        with gillard.app.app_context():
+            playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
+            show = gillard.db.session.query(Show).filter_by(id=1).one()
+            show_playlists = show.playlists
+
+        assert len(show_playlists) == 1
+
+        first_show_playlist = show_playlists[0]
+
+
+
+        assert playlist.id == first_show_playlist.id
+
+        rv = self.app.get('/playlist/new/{}'.format(show_id))
+        res_json = json.loads(rv.data.decode("utf-8"))
+
+        with gillard.app.app_context():
+            playlist = gillard.db.session.query(Playlist).filter_by(id=2).one()
+            show = gillard.db.session.query(Show).filter_by(id=1).one()
+            show_playlists = show.playlists
+
+        assert len(show_playlists) == 2
+
+        second_show_playlist = show_playlists[1]
+
+        assert playlist.id == second_show_playlist.id
+        assert first_show_playlist.id != second_show_playlist.id
 
     def test_new_playlist_404s_on_no_show_id(self):
         rv = self.app.get('/playlist/new/')
