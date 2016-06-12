@@ -96,8 +96,6 @@ class GillardTestCase(test_utils.GillardBaseTestCase):
 
         first_show_playlist = show_playlists[0]
 
-
-
         assert playlist.id == first_show_playlist.id
 
         rv = self.app.get('/playlist/new/{}'.format(show_id))

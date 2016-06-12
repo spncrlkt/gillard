@@ -5,6 +5,21 @@ import datetime
 
 from database import db
 
+class Show(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    display_id = db.Column(db.Text, index=True, unique=True)
+    playlists = relationship("Playlist")
+    startDay = db.Column(db.Integer)
+    startHour = db.Column(db.Integer)
+    endDay = db.Column(db.Integer)
+    endHour = db.Column(db.Integer)
+
+    def __init__(self, display_id, **kwargs):
+        # auto-generate password && display_id hashes
+        super(Show, self).__init__(**kwargs)
+        self.display_id = display_id
+
+
 class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     songs = relationship("Song")
@@ -19,21 +34,6 @@ class Playlist(db.Model):
         super(Playlist, self).__init__(**kwargs)
         self.password = uuid.uuid4().hex
         self.display_id = uuid.uuid4().hex
-
-
-class Show(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    display_id = db.Column(db.Text, index=True, unique=True)
-    playlists = relationship("Playlist")
-    startDay = db.Column(db.Integer)
-    startHour = db.Column(db.Integer)
-    endDay = db.Column(db.Integer)
-    endHour = db.Column(db.Integer)
-
-    def __init__(self, display_id, **kwargs):
-        # auto-generate password && display_id hashes
-        super(Show, self).__init__(**kwargs)
-        self.display_id = display_id
 
 
 def update_played_at(context):

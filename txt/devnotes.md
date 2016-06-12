@@ -18,6 +18,8 @@ redo backend to nginx/gunicorn/flask/postgres stack
 
 ## routes
 - /playlist/new/:showid - GET
+  - returns playlist.display_id && password
+
 - /playlist/:id - read-only - GET
 - /playlist/:id+:pw - edit mode - GET
 - /playlist/:id/add_song - POST
@@ -35,32 +37,36 @@ redo backend to nginx/gunicorn/flask/postgres stack
 
 
 ## models
-- Playlist
+- Show
+  - (Has Many) Playlists
   - display_id
-  - pw
-  - 1 - Many Songs
+  - startDay
+  - startHour
+  - endDay
+  - endHour
+
+- Playlist
+  - (Has Many) Songs
+  - display_id
+  - password
   - FK showID
   - created at
+  - updated at
 
 - Song
+  - FK playlist_id
   - artist
   - title
   - album
   - label
-  - year
+  - release_date
   - notes
   - img64px
   - img300px
   - played
   - played_at
   - created_at
-
-- Show
-  - showID: String,
-  - startDay: Number,
-  - startHour: Number,
-  - endDay: Number,
-  - endHour: Number,
+  - updated_at
 
 
 ## auth
