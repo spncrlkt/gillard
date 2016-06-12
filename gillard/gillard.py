@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from random import random
 import math
 
+from utils import eprint
 from database import db
 
-from models import Playlist
+from models import Playlist, Show
 from invalid_usage import InvalidUsage
 
 app = Flask(__name__)
@@ -37,6 +38,13 @@ def new_playlist(show_id):
     playlist = Playlist()
     db.session.add(playlist)
     db.session.commit()
+    playlist_id = playlist.id
+    db.session.expunge_all()
+    playlist = db.session.query(Playlist).filter_by(id=playlist_id).one()
+    # shows = db.session.query(Show).filter_by(display_id=show_id)
+    # import sys; print(dir(shows),file=sys.stderr)
+    raise ValueError('A very specific bad thing happened')
+
 
     return jsonify(
         display_id=playlist.display_id,
@@ -55,7 +63,11 @@ def drop_tables():
 def handle_invalid_usage(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
-    return response
+
+@app.errorhandler(Exception)
+def all_error_handler(error):
+    eprint(error)
+    return 'Error', 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

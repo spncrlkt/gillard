@@ -23,6 +23,7 @@ class Playlist(db.Model):
 
 class Show(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    display_id = db.Column(db.Text, index=True, unique=True)
     playlists = relationship("Playlist")
     startDay = db.Column(db.Integer)
     startHour = db.Column(db.Integer)
