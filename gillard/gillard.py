@@ -5,6 +5,8 @@ import math
 
 from database import db
 
+from models import Playlist
+
 app = Flask(__name__)
 
 db_uri = 'postgresql+psycopg2://postgres:postgres@postgres:5432'
@@ -31,9 +33,13 @@ def health():
 
 @app.route('/playlist/new/<show_id>')
 def new_playlist(show_id):
+    playlist = Playlist()
+    db.session.add(playlist)
+    db.session.commit()
+
     return jsonify(
-        display_id='OK',
-        password='OK',
+        display_id='FAKE',
+        password='FAKE',
     )
 
 def create_tables():
