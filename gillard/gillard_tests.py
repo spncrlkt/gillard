@@ -32,21 +32,30 @@ class GillardTestCase(test_utils.GillardBaseTestCase):
         rv = self.app.get('/playlist/new/{}'.format(show_id))
         assert rv.status_code == 200
 
-    def _test_new_playlist_returns_disp_pw(self):
-        rv = self.app.get('/playlist/new/TESTID')
+    def test_new_playlist_returns_disp_pw(self):
+        show_id = 'TESTID'
+        with gillard.app.app_context():
+            test_utils.make_show(gillard.db.session, show_id)
+        rv = self.app.get('/playlist/new/{}'.format(show_id))
         res_json = json.loads(rv.data.decode("utf-8"))
         assert res_json['display_id'] is not None
         assert res_json['password'] is not None
 
-    def _test_new_playlist_mks_db_record(self):
-        rv = self.app.get('/playlist/new/TESTID')
+    def test_new_playlist_mks_db_record(self):
+        show_id = 'TESTID'
+        with gillard.app.app_context():
+            test_utils.make_show(gillard.db.session, show_id)
+        rv = self.app.get('/playlist/new/{}'.format(show_id))
         with gillard.app.app_context():
             playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
         assert playlist.display_id is not None
         assert playlist.password is not None
 
-    def _test_new_playlist_returns_db_record_vals(self):
-        rv = self.app.get('/playlist/new/TESTID')
+    def test_new_playlist_returns_db_record_vals(self):
+        show_id = 'TESTID'
+        with gillard.app.app_context():
+            test_utils.make_show(gillard.db.session, show_id)
+        rv = self.app.get('/playlist/new/{}'.format(show_id))
         res_json = json.loads(rv.data.decode("utf-8"))
         with gillard.app.app_context():
             playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
