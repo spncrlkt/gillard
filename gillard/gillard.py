@@ -6,6 +6,7 @@ import math
 from database import db
 
 from models import Playlist
+from invalid_usage import InvalidUsage
 
 app = Flask(__name__)
 
@@ -49,6 +50,12 @@ def create_tables():
 def drop_tables():
     db.drop_all()
     return 'dropped db tables'
+
+@app.errorhandler(InvalidUsage)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

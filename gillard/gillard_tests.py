@@ -7,6 +7,10 @@ from models import Playlist
 
 class GillardTestCase(test_utils.GillardBaseTestCase):
 
+    def test_invalid_req(self):
+        rv = self.app.get('/bad_url_dont_exist')
+        assert rv.status_code == 404
+
     def test_index_exists(self):
         rv = self.app.get('/')
         assert rv.status_code == 200
@@ -34,10 +38,14 @@ class GillardTestCase(test_utils.GillardBaseTestCase):
         assert playlist.display_id is not None
         assert playlist.password is not None
 
-    def test_new_playlist_mks_db_record(self):
+    def test_new_playlist_returns_db_record_vals(self):
         rv = self.app.get('/playlist/new/TESTID')
         res_json = json.loads(rv.data.decode("utf-8"))
         with gillard.app.app_context():
             playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
         assert playlist.display_id == res_json['display_id']
         assert playlist.password == res_json['password']
+
+    def test_new_playlist_errors_on_no_show_id(self):
+        rv = self.app.get('/playlist/new/')
+        assert rv.status_code == 404
