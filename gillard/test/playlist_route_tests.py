@@ -19,6 +19,12 @@ class PlaylistRouteTestCase(test_utils.GillardBaseTestCase):
         res_json = json.loads(rv.data.decode("utf-8"))
         assert res_json['message'] == 'No playlist found for id: FAKEID'
 
+    def test_playlist_exists(self):
+        with gillard.app.app_context():
+            playlist = test_utils.make_playlist(gillard.db.session)
+        rv = self.app.get('/playlist/{}'.format(playlist.display_id))
+        assert rv.status_code == 200
+
         """
         show_id = 'TESTID'
         password = 'TESTPW'

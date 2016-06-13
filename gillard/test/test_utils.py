@@ -1,7 +1,7 @@
 import unittest
 
 import gillard
-from models import Show
+from models import Show, Playlist
 
 def save_and_refresh(session, record):
     session.add(record)
@@ -14,6 +14,12 @@ def make_show(session, show_display_id, password):
     show = Show(show_display_id)
     show.password = password
     return save_and_refresh(session, show)
+
+def make_playlist(session):
+    show = make_show(session, 'FAKESHOWID', 'FAKESHOWPW')
+    playlist = Playlist()
+    show.playlists.append(playlist)
+    return save_and_refresh(session, playlist)
 
 class GillardBaseTestCase(unittest.TestCase):
 
