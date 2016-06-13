@@ -54,7 +54,7 @@ def new_playlist():
 
 @app.route('/playlist/<display_id>', methods=['GET'])
 def playlist(display_id):
-    return ''
+    raise InvalidUsage('No playlist found for id: {}'.format(display_id))
 
 def create_tables():
     db.create_all()

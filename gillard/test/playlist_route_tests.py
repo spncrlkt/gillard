@@ -13,11 +13,11 @@ class PlaylistRouteTestCase(test_utils.GillardBaseTestCase):
         rv = self.app.get('/playlist/{}'.format(playlist_display_id))
         assert rv.status_code != 404
 
-    def _test_playlist_throws_400(self):
+    def test_playlist_not_exists_message(self):
         playlist_display_id = 'FAKEID'
         rv = self.app.get('/playlist/{}'.format(playlist_display_id))
-        eprint(rv.status_code)
-        assert rv.status_code == 400
+        res_json = json.loads(rv.data.decode("utf-8"))
+        assert res_json['message'] == 'No playlist found for id: FAKEID'
 
         """
         show_id = 'TESTID'
