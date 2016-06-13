@@ -18,10 +18,10 @@ redo backend to nginx/gunicorn/flask/postgres stack
 
 ## routes
 - /playlist/new/:showid - GET
-  - returns playlist.display_id && password
+  - returns playlist.display_id
 
 - /playlist/:id - read-only - GET
-- /playlist/:id+:pw - edit mode - GET
+- /playlist/:id+:show_id+:pw - edit mode - GET
 - /playlist/:id/add_song - POST
 - /playlist/:id/delete_song - POST
 - /playlist/:id/delete - POST
@@ -30,6 +30,8 @@ redo backend to nginx/gunicorn/flask/postgres stack
 
 - /song/:id - GET
 - /song/:id - POST
+
+- /loadSchedule - post
 
 - /search/:artist+:title - GET
 - /nowPlaying/:format - GET

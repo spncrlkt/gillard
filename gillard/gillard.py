@@ -19,7 +19,7 @@ db_uri = 'postgresql+psycopg2://postgres:postgres@postgres:5432'
 app.config.update(dict(
     SQLALCHEMY_DATABASE_URI='{}/dev'.format(db_uri),
     DEBUG=True,
-    SECRET_KEY='development key',
+    SECRET_KEY="w!\x1c\xcd\xc5\x82\xdc'\xdd>\x1b,\xaf(\x9b\xc8\x80|k\x10<\x8fo\xaf",
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
 ))
 app.config.from_envvar('GILLARD_SETTINGS', silent=True)
