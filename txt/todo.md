@@ -8,12 +8,18 @@
 - [X] do /health/
 - [X] test show model
 - [X] do show model
+- [X] test playlist model
+- [X] do playlist model
+- [X] test song model
+- [X] do song model
+- [X] test playlist/new route
+- [X] do playlist/new route
+- [X] password on show, not playlist
+
 
 ## WH1P
-- [ ] test playlist model
+
 
 ## L3FT
 
-- [ ] do playlist model
-- [ ] test song model
-- [ ] do song model
+

@@ -1,6 +1,6 @@
 import sys
 import traceback
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from random import random
@@ -36,10 +36,12 @@ def hello_world():
 def health():
     return 'OK'
 
-@app.route('/playlist/new/<show_id>')
-def new_playlist(show_id):
+@app.route('/playlist/new', methods=['GET'])
+def new_playlist():
+    show_id = request.args.get('show_id')
+    password = request.args.get('password')
     try:
-        show = db.session.query(Show).filter_by(display_id=show_id).one()
+        show = db.session.query(Show).filter_by(display_id=show_id, password=password).one()
     except NoResultFound as ex:
         raise InvalidUsage('No show found for id: {}'.format(show_id))
 
