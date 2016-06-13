@@ -36,7 +36,16 @@ redo backend to nginx/gunicorn/flask/postgres stack
 - /health - GET
 
 
-## models
+## Data Model
+
+In a nutshell for each Show, there's 1 or more Playlists,
+and for each Playlist there's 1 or more Song.
+
+For each song we capture:
+artist, title, album, label, release_date, dj provided notes,
+a link to an album cover img, whether it was played,
+and (start) time it was played.
+
 - Show
   - (Has Many) Playlists
   - display_id
