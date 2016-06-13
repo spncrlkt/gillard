@@ -52,6 +52,10 @@ def new_playlist():
 
     return jsonify(display_id=playlist.display_id)
 
+@app.route('/playlist/<display_id>', methods=['GET'])
+def playlist(display_id):
+    return ''
+
 def create_tables():
     db.create_all()
     return 'created db tables'
