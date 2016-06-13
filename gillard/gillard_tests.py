@@ -39,7 +39,6 @@ class GillardTestCase(test_utils.GillardBaseTestCase):
         rv = self.app.get('/playlist/new/{}'.format(show_id))
         res_json = json.loads(rv.data.decode("utf-8"))
         assert res_json['display_id'] is not None
-        assert res_json['password'] is not None
 
     def test_new_playlist_mks_db_record(self):
         show_id = 'TESTID'
@@ -49,7 +48,6 @@ class GillardTestCase(test_utils.GillardBaseTestCase):
         with gillard.app.app_context():
             playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
         assert playlist.display_id is not None
-        assert playlist.password is not None
 
     def test_new_playlist_returns_db_record_vals(self):
         show_id = 'TESTID'
@@ -60,7 +58,6 @@ class GillardTestCase(test_utils.GillardBaseTestCase):
         with gillard.app.app_context():
             playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
         assert playlist.display_id == res_json['display_id']
-        assert playlist.password == res_json['password']
 
     def test_new_playlist_associates_to_show(self):
         show_id = 'TESTID'

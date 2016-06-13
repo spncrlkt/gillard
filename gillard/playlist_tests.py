@@ -16,16 +16,6 @@ class PlaylistTestCase(test_utils.GillardBaseTestCase):
 
             assert playlist.id is not None
 
-    def test_new_playlist_has_password(self):
-        with gillard.app.app_context():
-            playlist = Playlist()
-
-            playlist = test_utils.save_and_refresh(
-                gillard.db.session, playlist
-            )
-
-            assert playlist.password is not None
-
     def test_new_playlist_has_display_id(self):
         with gillard.app.app_context():
             playlist = Playlist()
@@ -59,7 +49,7 @@ class PlaylistTestCase(test_utils.GillardBaseTestCase):
             # updated_at starts empty
             assert playlist.updated_at is None
 
-            playlist.password = 'fake_ass_bullshit'
+            playlist.display_id = 'NEWTESTDISPID'
 
             playlist = test_utils.save_and_refresh(
                 gillard.db.session, playlist

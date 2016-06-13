@@ -48,10 +48,7 @@ def new_playlist(show_id):
     db.session.add(playlist)
     db.session.commit()
 
-    return jsonify(
-        display_id=playlist.display_id,
-        password=playlist.password,
-    )
+    return jsonify(display_id=playlist.display_id)
 
 def create_tables():
     db.create_all()

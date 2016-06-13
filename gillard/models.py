@@ -9,6 +9,7 @@ class Show(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     display_id = db.Column(db.Text, index=True, unique=True)
     playlists = relationship("Playlist")
+    password = db.Column(db.Text)
     startDay = db.Column(db.Integer)
     startHour = db.Column(db.Integer)
     endDay = db.Column(db.Integer)
@@ -25,14 +26,12 @@ class Playlist(db.Model):
     songs = relationship("Song")
     show_id = db.Column(db.Integer, db.ForeignKey('show.id'))
     display_id = db.Column(db.Text, index=True, unique=True)
-    password = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)
     updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
 
     def __init__(self, **kwargs):
-        # auto-generate password && display_id hashes
+        # auto-generate display_id hash
         super(Playlist, self).__init__(**kwargs)
-        self.password = uuid.uuid4().hex
         self.display_id = uuid.uuid4().hex
 
 
