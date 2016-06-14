@@ -94,7 +94,11 @@ def add_song(display_id):
     except NoResultFound as ex:
         raise InvalidUsage('No playlist found for id: {}'.format(display_id))
 
-    song_data = request.get_json()
+    try:
+        song_data = request.get_json()
+    except Exception as ex:
+        raise InvalidUsage('Invalid JSON')
+
     song = Song()
     playlist.songs.append(song)
     db.session.add(song)
