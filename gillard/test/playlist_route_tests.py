@@ -26,7 +26,14 @@ class PlaylistRouteTestCase(test_utils.GillardBaseTestCase):
 
         with self.app as app:
             rv = app.get('/playlist/{}'.format(playlist.display_id))
-            assert rv.status_code == 200
+            assert session['playlist_mode'] == 'readonly'
+
+    def test_playlist_mode_readonly(self):
+        with gillard.app.app_context():
+            playlist = test_utils.make_playlist(gillard.db.session)
+
+        with self.app as app:
+            rv = app.get('/playlist/{}'.format(playlist.display_id))
             assert session['playlist_mode'] == 'readonly'
 
         """
