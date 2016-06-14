@@ -88,6 +88,12 @@ def playlist(display_id):
 
 @app.route('/playlist/<display_id>/add_song', methods=['POST'])
 def add_song(display_id):
+    # check playlist exists
+    try:
+        playlist = db.session.query(Playlist).filter_by(display_id=display_id).one()
+    except NoResultFound as ex:
+        raise InvalidUsage('No playlist found for id: {}'.format(display_id))
+
     return 'OK'
 
 def create_tables():

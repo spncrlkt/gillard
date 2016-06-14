@@ -9,10 +9,13 @@ from models import Playlist, Show
 
 class PlaylistPostRoutesTestCase(test_utils.GillardBaseTestCase):
 
-    def test_playlist_add_song_exists(self):
-        with gillard.app.app_context():
-            playlist = test_utils.make_playlist(gillard.db.session)
+    def test_playlist_add_song_route_exists(self):
+        playlist_display_id = 'FAKEID'
+        rv = self.app.post('/playlist/{}/add_song'.format(playlist_display_id))
+        assert rv.status_code != 404
 
-        with self.app as app:
-            rv = app.post('/playlist/{}/add_song'.format(playlist.display_id))
-            assert rv.status_code != 404
+    def test_playlist_not_exists_message(self):
+        playlist_display_id = 'FAKEID'
+        rv = self.app.post('/playlist/{}/add_song'.format(playlist_display_id))
+        res_json = json.loads(rv.data.decode("utf-8"))
+        assert res_json['message'] == 'No playlist found for id: FAKEID'
