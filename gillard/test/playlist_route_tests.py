@@ -111,11 +111,3 @@ class PlaylistRouteTestCase(test_utils.GillardBaseTestCase):
             rv = app.get('/playlist/{}'.format(playlist.display_id))
             res_json = json.loads(rv.data.decode("utf-8"))
             assert res_json['display_id'] == playlist.display_id
-
-    def test_playlist_add_song_exists(self):
-        with gillard.app.app_context():
-            playlist = test_utils.make_playlist(gillard.db.session)
-
-        with self.app as app:
-            rv = app.post('/playlist/{}/add_song'.format(playlist.display_id))
-            assert rv.status_code != 404
