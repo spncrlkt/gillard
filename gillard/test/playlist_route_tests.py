@@ -79,3 +79,14 @@ class PlaylistRouteTestCase(test_utils.GillardBaseTestCase):
                 format(playlist.display_id, bad_show_id, bad_password)
             rv = app.get(formatted_url)
             assert session['playlist_mode'] == 'readonly'
+
+    def test_playlist_json_has_song(self):
+        with gillard.app.app_context():
+            playlist = test_utils.make_playlist(gillard.db.session)
+            playlist_display_id = playlist.display_id
+            song = test_utils.make_song(gillard.db.session, playlist)
+
+        with self.app as app:
+            rv = app.get('/playlist/{}'.format(playlist_display_id))
+            res_json = json.loads(rv.data.decode("utf-8"))
+            assert len(res_json['songs']) == 1

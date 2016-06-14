@@ -81,7 +81,9 @@ def playlist(display_id):
         # TODO log
         session['playlist_mode'] = 'readonly'
 
-    return 'OK'
+    return jsonify(
+        songs=[song.as_dict() for song in playlist.songs]
+    )
 
 def create_tables():
     db.create_all()
