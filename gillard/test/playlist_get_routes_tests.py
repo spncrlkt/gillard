@@ -7,7 +7,7 @@ from utils import eprint
 
 from models import Playlist, Show
 
-class PlaylistRouteTestCase(test_utils.GillardBaseTestCase):
+class PlaylistGetRoutesTestCase(test_utils.GillardBaseTestCase):
 
     def test_playlist_route_exsist(self):
         playlist_display_id = 'FAKEID'
