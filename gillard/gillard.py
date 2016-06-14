@@ -99,7 +99,7 @@ def add_song(display_id):
     except Exception as ex:
         raise InvalidUsage('Invalid JSON')
 
-    song = Song()
+    song = Song(**song_data)
     playlist.songs.append(song)
     db.session.add(song)
     db.session.commit()

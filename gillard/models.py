@@ -59,3 +59,9 @@ class Song(db.Model):
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+    def __init__(self, **kwargs):
+        # init w/ song data
+        super(Song, self).__init__(**kwargs)
+        for key, value in kwargs.items():
+            self.key = value
