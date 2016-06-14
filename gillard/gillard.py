@@ -82,6 +82,7 @@ def playlist(display_id):
         session['playlist_mode'] = 'readonly'
 
     return jsonify(
+        display_id=display_id,
         songs=[song.as_dict() for song in playlist.songs]
     )
 
