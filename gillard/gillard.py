@@ -40,6 +40,8 @@ def health():
 def new_playlist():
     show_id = request.args.get('show_id')
     password = request.args.get('password')
+
+    # check show exists
     try:
         show = db.session.query(Show).filter_by(display_id=show_id, password=password).one()
     except NoResultFound as ex:
@@ -54,12 +56,29 @@ def new_playlist():
 
 @app.route('/playlist/<display_id>', methods=['GET'])
 def playlist(display_id):
+    # check playlist exists
     try:
         playlist = db.session.query(Playlist).filter_by(display_id=display_id).one()
     except NoResultFound as ex:
         raise InvalidUsage('No playlist found for id: {}'.format(display_id))
 
-    session['playlist_mode'] = 'readonly'
+    # check for playlist_mode
+    show_id = request.args.get('show_id', None)
+    password = request.args.get('password', None)
+
+    if show_id is None or password is None:
+        session['playlist_mode'] = 'readonly'
+
+    # check show exists
+    try:
+        show = db.session.query(Show).filter_by(display_id=show_id, password=password).one()
+        if playlist in show.playlists:
+            session['playlist_mode'] = 'edit'
+        else:
+            session['playlist_mode'] = 'readonly'
+    except NoResultFound as ex:
+        session['playlist_mode'] = 'readonly'
+
 
     return 'OK'
 

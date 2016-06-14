@@ -15,8 +15,9 @@ def make_show(session, show_display_id, password):
     show.password = password
     return save_and_refresh(session, show)
 
-def make_playlist(session):
-    show = make_show(session, 'FAKESHOWID', 'FAKESHOWPW')
+def make_playlist(session, show=None):
+    if show is None:
+        show = make_show(session, 'FAKESHOWID', 'FAKESHOWPW')
     playlist = Playlist()
     show.playlists.append(playlist)
     return save_and_refresh(session, playlist)
