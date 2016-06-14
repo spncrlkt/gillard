@@ -86,6 +86,10 @@ def playlist(display_id):
         songs=[song.as_dict() for song in playlist.songs]
     )
 
+@app.route('/playlist/<display_id>/add_song', methods=['POST'])
+def add_song(display_id):
+    return 'OK'
+
 def create_tables():
     db.create_all()
     return 'created db tables'
