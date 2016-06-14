@@ -1,6 +1,6 @@
 import sys
 import traceback
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from random import random
@@ -58,6 +58,9 @@ def playlist(display_id):
         playlist = db.session.query(Playlist).filter_by(display_id=display_id).one()
     except NoResultFound as ex:
         raise InvalidUsage('No playlist found for id: {}'.format(display_id))
+
+    session['playlist_mode'] = 'readonly'
+
     return 'OK'
 
 def create_tables():

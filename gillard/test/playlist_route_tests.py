@@ -1,4 +1,5 @@
 import json
+from flask import session
 
 import gillard
 import test_utils
@@ -22,8 +23,11 @@ class PlaylistRouteTestCase(test_utils.GillardBaseTestCase):
     def test_playlist_exists(self):
         with gillard.app.app_context():
             playlist = test_utils.make_playlist(gillard.db.session)
-        rv = self.app.get('/playlist/{}'.format(playlist.display_id))
-        assert rv.status_code == 200
+
+        with self.app as app:
+            rv = app.get('/playlist/{}'.format(playlist.display_id))
+            assert rv.status_code == 200
+            assert session['playlist_mode'] == 'readonly'
 
         """
         show_id = 'TESTID'
