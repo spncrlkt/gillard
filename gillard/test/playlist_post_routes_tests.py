@@ -135,3 +135,11 @@ class PlaylistPostRoutesTestCase(test_utils.GillardBaseTestCase):
             show = gillard.db.session.query(Show).filter_by(id=1).one()
             song = show.playlists[0].songs[0]
             assert song.artist == 'artist'
+            assert song.title == 'title'
+            assert song.album == 'album'
+            assert song.label == 'label'
+            assert song.release_date == 'release_date'
+            assert song.notes == 'notes'
+            assert song.img64px == 'img64px'
+            assert song.img300px == 'img300px'
+            assert song.played == True

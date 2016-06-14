@@ -25,16 +25,17 @@ def make_playlist(session, show=None, ):
 def make_song(session, playlist=None):
     if playlist is None:
         playlist = make_playlist(session)
-    song = Song()
-    song.artist = 'artist'
-    song.title = 'title'
-    song.album = 'album'
-    song.label = 'label'
-    song.release_date = 'release_date'
-    song.notes = 'notes'
-    song.img64px = 'img64px'
-    song.img300px = 'img300px'
-    song.played = True
+    song = Song(
+        artist = 'artist',
+        title = 'title',
+        album = 'album',
+        label = 'label',
+        release_date = 'release_date',
+        notes = 'notes',
+        img64px = 'img64px',
+        img300px = 'img300px',
+        played = True,
+    )
     playlist.songs.append(song)
 
     session.add(song)
