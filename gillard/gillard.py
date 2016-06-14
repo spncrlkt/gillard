@@ -9,7 +9,7 @@ import math
 from utils import eprint
 from database import db
 
-from models import Playlist, Show
+from models import Playlist, Show, Song
 from invalid_usage import InvalidUsage
 
 app = Flask(__name__)
@@ -93,6 +93,12 @@ def add_song(display_id):
         playlist = db.session.query(Playlist).filter_by(display_id=display_id).one()
     except NoResultFound as ex:
         raise InvalidUsage('No playlist found for id: {}'.format(display_id))
+
+    song_data = request.get_json()
+    song = Song()
+    playlist.songs.append(song)
+    db.session.add(song)
+    db.session.commit()
 
     return 'OK'
 
