@@ -15,7 +15,7 @@ def make_show(session, show_display_id, password):
     show.password = password
     return save_and_refresh(session, show)
 
-def make_playlist(session, show=None):
+def make_playlist(session, show=None, ):
     if show is None:
         show = make_show(session, 'FAKESHOWID', 'FAKESHOWPW')
     playlist = Playlist()
@@ -36,7 +36,9 @@ def make_song(session, playlist=None):
     song.img300px = 'img300px'
     song.played = True
     playlist.songs.append(song)
-    return save_and_refresh(session, song)
+
+    session.add(song)
+    gillard.db.session.commit()
 
 class GillardBaseTestCase(unittest.TestCase):
 

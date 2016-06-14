@@ -84,9 +84,21 @@ class PlaylistRouteTestCase(test_utils.GillardBaseTestCase):
         with gillard.app.app_context():
             playlist = test_utils.make_playlist(gillard.db.session)
             playlist_display_id = playlist.display_id
-            song = test_utils.make_song(gillard.db.session, playlist)
+            test_utils.make_song(gillard.db.session, playlist)
 
         with self.app as app:
             rv = app.get('/playlist/{}'.format(playlist_display_id))
             res_json = json.loads(rv.data.decode("utf-8"))
             assert len(res_json['songs']) == 1
+
+    def test_playlist_json_has_songs(self):
+        with gillard.app.app_context():
+            playlist = test_utils.make_playlist(gillard.db.session)
+            playlist_display_id = playlist.display_id
+            test_utils.make_song(gillard.db.session, playlist)
+            test_utils.make_song(gillard.db.session, playlist)
+
+        with self.app as app:
+            rv = app.get('/playlist/{}'.format(playlist_display_id))
+            res_json = json.loads(rv.data.decode("utf-8"))
+            assert len(res_json['songs']) == 2
