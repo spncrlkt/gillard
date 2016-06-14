@@ -69,16 +69,17 @@ def playlist(display_id):
     if show_id is None or password is None:
         session['playlist_mode'] = 'readonly'
 
-    # check show exists
+    # check show exists and associates to playlist
     try:
         show = db.session.query(Show).filter_by(display_id=show_id, password=password).one()
         if playlist in show.playlists:
             session['playlist_mode'] = 'edit'
         else:
+            # TODO log
             session['playlist_mode'] = 'readonly'
     except NoResultFound as ex:
+        # TODO log
         session['playlist_mode'] = 'readonly'
-
 
     return 'OK'
 
