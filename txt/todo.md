@@ -15,11 +15,12 @@
 - [X] test playlist/new route
 - [X] do playlist/new route
 - [X] password on show, not playlist
+- [X] make song test_util
+- [X] /playlist/:id contents
+- [X] /playlist/:id/add_song
 
 
 ## WH1P
 
-
 ## L3FT
-
 

@@ -88,6 +88,12 @@ def playlist(display_id):
 
 @app.route('/playlist/<display_id>/add_song', methods=['POST'])
 def add_song(display_id):
+    # check playlist_mode
+    playlist_mode = session.get('playlist_mode')
+    if playlist_mode != 'edit':
+        raise InvalidUsage("Can't add songs in readonly mode")
+
+
     # check playlist exists
     try:
         playlist = db.session.query(Playlist).filter_by(display_id=display_id).one()

@@ -48,9 +48,32 @@ class PlaylistPostRoutesTestCase(test_utils.GillardBaseTestCase):
             show = test_utils.make_show(gillard.db.session, show_id, password)
             playlist = test_utils.make_playlist(gillard.db.session, show)
 
-        rv = self.app.post('/playlist/{}/add_song'.format(playlist.display_id), data='not json{}', content_type = 'application/json')
+        rv = self.app.post(
+            '/playlist/{}/add_song'.format(playlist.display_id),
+            data='not json{}',
+            content_type = 'application/json'
+        )
         res_json = json.loads(rv.data.decode("utf-8"))
         assert res_json['message'] == 'Invalid JSON'
+
+    def test_playlist_add_song_readonly_mode(self):
+        show_id = 'TESTID'
+        password = 'TESTPW'
+        with gillard.app.app_context():
+            show = test_utils.make_show(gillard.db.session, show_id, password)
+            playlist = test_utils.make_playlist(gillard.db.session, show)
+
+        with self.app as app:
+            with app.session_transaction() as sess:
+                sess['playlist_mode'] = 'readonly'
+
+            rv = app.post(
+                '/playlist/{}/add_song'.format(playlist.display_id),
+                data='not json{}',
+                content_type = 'application/json'
+            )
+            res_json = json.loads(rv.data.decode("utf-8"))
+            assert res_json['message'] == "Can't add songs in readonly mode"
 
     def test_playlist_add_song(self):
         show_id = 'TESTID'
@@ -59,17 +82,21 @@ class PlaylistPostRoutesTestCase(test_utils.GillardBaseTestCase):
             show = test_utils.make_show(gillard.db.session, show_id, password)
             playlist = test_utils.make_playlist(gillard.db.session, show)
 
-        rv = self.app.post('/playlist/{}/add_song'.format(playlist.display_id), data=json.dumps(dict(
-            artist = 'artist',
-            title = 'title',
-            album = 'album',
-            label = 'label',
-            release_date = 'release_date',
-            notes = 'notes',
-            img64px = 'img64px',
-            img300px = 'img300px',
-            played = True,
-        )), content_type = 'application/json')
+        rv = self.app.post(
+            '/playlist/{}/add_song'.format(playlist.display_id),
+            data=json.dumps(dict(
+                artist = 'artist',
+                title = 'title',
+                album = 'album',
+                label = 'label',
+                release_date = 'release_date',
+                notes = 'notes',
+                img64px = 'img64px',
+                img300px = 'img300px',
+                played = True,
+            )),
+            content_type = 'application/json'
+        )
 
         with gillard.app.app_context():
             show = gillard.db.session.query(Show).filter_by(id=1).one()
