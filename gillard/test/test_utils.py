@@ -40,6 +40,7 @@ def make_song(session, playlist=None):
 
     session.add(song)
     gillard.db.session.commit()
+    return song
 
 class GillardBaseTestCase(unittest.TestCase):
 

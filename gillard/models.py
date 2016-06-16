@@ -23,7 +23,7 @@ class Show(db.Model):
 
 class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    songs = relationship("Song")
+    songs = relationship("Song", cascade="all, delete, delete-orphan")
     show_id = db.Column(db.Integer, db.ForeignKey('show.id'))
     display_id = db.Column(db.Text, index=True, unique=True)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now)

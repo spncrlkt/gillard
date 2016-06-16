@@ -112,6 +112,42 @@ def add_song(display_id):
 
     return 'OK'
 
+@app.route('/playlist/<display_id>/delete_song', methods=['POST'])
+def delete_song(display_id):
+    # check playlist_mode
+    playlist_mode = session.get('playlist_mode')
+    if playlist_mode != 'edit':
+        raise InvalidUsage("Can't delete songs in readonly mode")
+
+    try:
+        request_json = request.get_json()
+        song_id = request_json.get('song_id')
+    except Exception as ex:
+        raise InvalidUsage('Invalid JSON')
+
+    # check song exists
+    try:
+        song = db.session.query(Song).filter_by(id=song_id).one()
+    except NoResultFound as ex:
+        raise InvalidUsage('No song found for id: {}'.format(song_id))
+
+    # check playlist exists
+    try:
+        playlist = db.session.query(Playlist).filter_by(display_id=display_id).one()
+    except NoResultFound as ex:
+        raise InvalidUsage('No playlist found for id: {}'.format(display_id))
+
+    # check song in playlist
+    if song not in playlist.songs:
+        raise InvalidUsage("Song id {} not in playlist id {}".format(song.id, playlist.display_id))
+
+    # playlist.songs.remove(song)
+    #db.session.add(playlist)
+    db.session.delete(song)
+    db.session.commit()
+
+    return 'OK'
+
 def create_tables():
     db.create_all()
     return 'created db tables'
