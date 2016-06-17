@@ -162,6 +162,11 @@ def playlists_by_show_id(show_display_id):
 
 @app.route('/song/<song_id>', methods=['POST'])
 def song(song_id):
+    # check playlist_mode
+    playlist_mode = session.get('playlist_mode')
+    if playlist_mode != 'edit':
+        raise InvalidUsage("Can't edit songs in readonly mode")
+
     # check song exists
     try:
         song = db.session.query(Song).filter_by(id=song_id).one()
@@ -175,7 +180,10 @@ def song(song_id):
         raise InvalidUsage('Invalid JSON')
 
     for key, value in song_data.items():
-        setattr(song, key, value)
+        if hasattr(song, key):
+            setattr(song, key, value)
+        else:
+            raise InvalidUsage("Song has no attribute: {}".format(key))
 
     db.session.add(song)
     db.session.commit()
