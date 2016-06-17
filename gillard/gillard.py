@@ -160,6 +160,16 @@ def playlists_by_show_id(show_display_id):
         playlists=playlist_disp_ids
     )
 
+@app.route('/song/<song_id>', methods=['POST'])
+def song(song_id):
+    # check song exists
+    try:
+        song = db.session.query(Song).filter_by(id=song_id).one()
+    except NoResultFound as ex:
+        raise InvalidUsage('No song found for id: {}'.format(song_id))
+
+    return 'OK'
+
 def create_tables():
     db.create_all()
     return 'created db tables'
