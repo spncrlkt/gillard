@@ -5,11 +5,11 @@ import gillard
 import test_utils
 from utils import eprint
 
-from models import Playlist, Show
+from models import Playlist, Show, Song
 
 class SongRouteTestCase(test_utils.GillardBaseTestCase):
 
-    def test_song_route_exists(self):
+    def test_song_route_not_404(self):
         song_id = 69
         rv = self.app.post('/song/{}'.format(song_id))
         assert rv.status_code != 404
@@ -20,3 +20,52 @@ class SongRouteTestCase(test_utils.GillardBaseTestCase):
         res_json = json.loads(rv.data.decode("utf-8"))
         assert res_json['message'] == 'No song found for id: 69'
 
+    def test_song_route_200(self):
+        with gillard.app.app_context():
+            song = test_utils.make_song(gillard.db.session)
+            song_id = song.id
+
+        artist = 'NEW ARTIST'
+        rv = self.app.post(
+            '/song/{}'.format(song_id),
+            data=json.dumps(dict(
+                artist=artist,
+            )),
+            content_type = 'application/json'
+        )
+        assert rv.status_code == 200
+
+    def test_song_route_invalid_json(self):
+        with gillard.app.app_context():
+            song = test_utils.make_song(gillard.db.session)
+            song_id = song.id
+
+        artist = 'NEW ARTIST'
+        rv = self.app.post(
+            '/song/{}'.format(song_id),
+            data='invalid_JSON{}',
+            content_type = 'application/json'
+        )
+        res_json = json.loads(rv.data.decode("utf-8"))
+        assert res_json['message'] == "Invalid JSON"
+
+
+    def test_song_route_changes_record(self):
+        with gillard.app.app_context():
+            song = test_utils.make_song(gillard.db.session)
+            song_id = song.id
+
+        artist = 'NEW ARTIST'
+        rv = self.app.post(
+            '/song/{}'.format(song_id),
+            data=json.dumps(dict(
+                artist=artist,
+            )),
+            content_type = 'application/json'
+        )
+
+        with gillard.app.app_context():
+            song = gillard.db.session.query(Song).filter_by(id=song_id).one()
+            new_artist = song.artist
+
+        assert new_artist == artist

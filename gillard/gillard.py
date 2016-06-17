@@ -168,6 +168,18 @@ def song(song_id):
     except NoResultFound as ex:
         raise InvalidUsage('No song found for id: {}'.format(song_id))
 
+    # parse json request
+    try:
+        song_data = request.get_json()
+    except Exception as ex:
+        raise InvalidUsage('Invalid JSON')
+
+    for key, value in song_data.items():
+        setattr(song, key, value)
+
+    db.session.add(song)
+    db.session.commit()
+
     return 'OK'
 
 def create_tables():
