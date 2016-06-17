@@ -210,6 +210,8 @@ def song(song_id):
 
 @app.route('/loadSchedule', methods=['POST'])
 def load_schedule():
+    # http://flask.pocoo.org/docs/0.11/patterns/fileuploads/
+    # https://gist.github.com/DazWorrall/1779861
     return 'OK'
 
 def create_tables():
