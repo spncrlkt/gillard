@@ -22,13 +22,8 @@ redo backend to nginx/gunicorn/flask/postgres stack
 - /playlist/:id - read-only - GET
 - /playlist/:id?:show_id+:pw - edit mode - GET
 - /playlist/:id/add_song - POST
-
 - /playlist/:id/delete_song - POST
-- /playlist/:id/delete - POST
-
 - /playlists/:showid - GET
-
-- /song/:id - GET
 - /song/:id - POST
 
 - /loadSchedule - post
@@ -36,6 +31,8 @@ redo backend to nginx/gunicorn/flask/postgres stack
 - /search/:artist+:title - GET
 - /nowPlaying/:format - GET
 - /health - GET
+
+- /playlist/:id/delete - POST
 
 
 ## Data Model
