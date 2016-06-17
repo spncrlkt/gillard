@@ -1,8 +1,12 @@
 import sys
 import traceback
+import inspect
+import os
 from flask import Flask, jsonify, request, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
+from werkzeug.utils import secure_filename
+
 from random import random
 import math
 
@@ -16,11 +20,25 @@ app = Flask(__name__)
 
 db_uri = 'postgresql+psycopg2://postgres:postgres@postgres:5432'
 
+UPLOAD_FOLDER = os.path.dirname(
+    os.path.abspath(
+        inspect.getfile(
+            inspect.currentframe()
+        )
+    )
+) + '/uploads'
+
+eprint(UPLOAD_FOLDER)
+
+ALLOWED_EXTENSIONS = set(['json'])
+
+
 app.config.update(dict(
     SQLALCHEMY_DATABASE_URI='{}/dev'.format(db_uri),
     DEBUG=True,
     SECRET_KEY="w!\x1c\xcd\xc5\x82\xdc'\xdd>\x1b,\xaf(\x9b\xc8\x80|k\x10<\x8fo\xaf",
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    UPLOAD_FOLDER=UPLOAD_FOLDER,
 ))
 app.config.from_envvar('GILLARD_SETTINGS', silent=True)
 
@@ -188,6 +206,10 @@ def song(song_id):
     db.session.add(song)
     db.session.commit()
 
+    return 'OK'
+
+@app.route('/loadSchedule', methods=['POST'])
+def load_schedule():
     return 'OK'
 
 def create_tables():
