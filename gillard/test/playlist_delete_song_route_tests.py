@@ -147,7 +147,8 @@ class PlaylistDeleteSongRouteTestCase(test_utils.GillardBaseTestCase):
             )
 
         res_json = json.loads(rv.data.decode("utf-8"))
-        assert res_json['message'] == "Song id {} not in playlist id {}".format(song_id, playlist_display_id)
+        assert res_json['message'] == \
+            "Song id {} not in playlist id {}".format(song_id, playlist_display_id)
 
     def test_playlist_delete_song(self):
         with gillard.app.app_context():
@@ -169,6 +170,45 @@ class PlaylistDeleteSongRouteTestCase(test_utils.GillardBaseTestCase):
                 '/playlist/{}/delete_song'.format(playlist_display_id),
                 data=json.dumps(dict(
                     song_id= song_id,
+                )),
+                content_type = 'application/json'
+            )
+
+        with gillard.app.app_context():
+            playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
+            songs = playlist.songs
+            assert len(songs) == 0
+
+    def test_playlist_delete_song_2X(self):
+        with gillard.app.app_context():
+            playlist = test_utils.make_playlist(gillard.db.session)
+            playlist_display_id = playlist.display_id
+            song_1 = test_utils.make_song(gillard.db.session, playlist)
+            song_1_id = song_1.id
+            song_2 = test_utils.make_song(gillard.db.session, playlist)
+            song_2_id = song_2.id
+
+        with gillard.app.app_context():
+            playlist = gillard.db.session.query(Playlist).filter_by(id=1).one()
+            songs = playlist.songs
+            assert len(songs) == 2
+
+        with self.app as app:
+            with app.session_transaction() as sess:
+                sess['playlist_mode'] = 'edit'
+
+            rv = app.post(
+                '/playlist/{}/delete_song'.format(playlist_display_id),
+                data=json.dumps(dict(
+                    song_id= song_1_id,
+                )),
+                content_type = 'application/json'
+            )
+
+            rv = app.post(
+                '/playlist/{}/delete_song'.format(playlist_display_id),
+                data=json.dumps(dict(
+                    song_id= song_2_id,
                 )),
                 content_type = 'application/json'
             )
