@@ -141,12 +141,24 @@ def delete_song(display_id):
     if song not in playlist.songs:
         raise InvalidUsage("Song id {} not in playlist id {}".format(song.id, playlist.display_id))
 
-    # playlist.songs.remove(song)
-    #db.session.add(playlist)
     db.session.delete(song)
     db.session.commit()
 
     return 'OK'
+
+@app.route('/playlists/<show_display_id>', methods=['GET'])
+def playlists_by_show_id(show_display_id):
+    # check show exists
+    try:
+        show = db.session.query(Show).filter_by(display_id=show_display_id).one()
+    except NoResultFound as ex:
+        raise InvalidUsage('No show found for id: {}'.format(show_display_id))
+
+    playlist_disp_ids = [x.display_id for x in show.playlists]
+
+    return jsonify(
+        playlists=playlist_disp_ids
+    )
 
 def create_tables():
     db.create_all()

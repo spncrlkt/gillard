@@ -10,17 +10,29 @@ def save_and_refresh(session, record):
     session.expunge_all()
     return session.query(type(record)).filter_by(id=record_id).one()
 
-def make_show(session, show_display_id, password):
+def save(session, record):
+    session.add(record)
+    gillard.db.session.commit()
+    return record
+
+def make_show(session, show_display_id='TESTID', password='TESTPW'):
     show = Show(show_display_id)
     show.password = password
     return save_and_refresh(session, show)
 
 def make_playlist(session, show=None, ):
     if show is None:
-        show = make_show(session, 'FAKESHOWID', 'FAKESHOWPW')
+        show = make_show(session)
     playlist = Playlist()
     show.playlists.append(playlist)
     return save_and_refresh(session, playlist)
+
+def make_playlist_no_expunge(session, show=None, ):
+    if show is None:
+        show = make_show(session)
+    playlist = Playlist()
+    show.playlists.append(playlist)
+    return save(session, playlist)
 
 def make_song(session, playlist=None):
     if playlist is None:
