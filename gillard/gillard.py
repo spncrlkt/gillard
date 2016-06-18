@@ -28,8 +28,6 @@ UPLOAD_FOLDER = os.path.dirname(
     )
 ) + '/uploads'
 
-eprint(UPLOAD_FOLDER)
-
 ALLOWED_EXTENSIONS = set(['json'])
 
 
