@@ -17,6 +17,7 @@ class ShowTestCase(test_utils.GillardBaseTestCase):
         with gillard.app.app_context():
             show = Show('TESTID')
             show.password = 'TESTPW'
+            show.title = 'A TEST SHOW TITLE'
             show.startDay = 2
             show.startHour = 4
             show.endDay = 6
@@ -26,6 +27,7 @@ class ShowTestCase(test_utils.GillardBaseTestCase):
 
             assert show.display_id == 'TESTID'
             assert show.password == 'TESTPW'
+            assert show.title == 'A TEST SHOW TITLE'
             assert show.startDay == 2
             assert show.startHour == 4
             assert show.endDay == 6

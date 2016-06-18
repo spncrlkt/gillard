@@ -10,6 +10,7 @@ class Show(db.Model):
     display_id = db.Column(db.Text, index=True, unique=True)
     playlists = relationship("Playlist")
     password = db.Column(db.Text)
+    title = db.Column(db.Text)
     startDay = db.Column(db.Integer)
     startHour = db.Column(db.Integer)
     endDay = db.Column(db.Integer)
