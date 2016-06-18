@@ -215,6 +215,9 @@ def load_schedule():
     if not schedule_file:
         raise InvalidUsage('Schedule file not provided')
 
+    filename = secure_filename(schedule_file.filename)
+    schedule_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
     return 'OK'
 
 def create_tables():
