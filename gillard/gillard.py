@@ -2,6 +2,7 @@ import sys
 import traceback
 import inspect
 import os
+import json
 from flask import Flask, jsonify, request, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
@@ -216,7 +217,14 @@ def load_schedule():
         raise InvalidUsage('Schedule file not provided')
 
     filename = secure_filename(schedule_file.filename)
-    schedule_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    schedule_file.save(filepath)
+
+    with open(filepath) as schedule_upload:
+        try:
+            schedule_json = json.load(schedule_upload)
+        except Exception as ex:
+            raise InvalidUsage('Invalid JSON: {}'.format(ex))
 
     return 'OK'
 

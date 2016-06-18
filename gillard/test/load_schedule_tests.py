@@ -20,7 +20,7 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
             buffered=True,
             content_type='multipart/form-data',
             data={
-                'schedule' : (BytesIO(b'hello there'), 'hello.txt')
+                'schedule' : (BytesIO(b'"{hello: world}"'), 'schedule.json')
             }
         )
         assert rv.status_code == 200
@@ -45,8 +45,21 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
             buffered=True,
             content_type='multipart/form-data',
             data={
-                'schedule' : (BytesIO(b'hello there'), 'hello.txt')
+                'schedule' : (BytesIO(b'"{hello: world}"'), 'schedule.json')
             }
         )
 
-        assert os.path.isfile("{}/hello.txt".format(gillard.UPLOAD_FOLDER))
+        assert os.path.isfile("{}/schedule.json".format(gillard.UPLOAD_FOLDER))
+
+    def test_schedule_upload_invalid_json(self):
+        rv = self.app.post(
+            '/loadSchedule',
+            buffered=True,
+            content_type='multipart/form-data',
+            data={
+                'schedule' : (BytesIO(b'invalid_json{}'), 'schedule.json')
+            }
+        )
+
+        res_json = json.loads(rv.data.decode("utf-8"))
+        assert res_json['message'] == 'Invalid JSON: Expecting value: line 1 column 1 (char 0)'
