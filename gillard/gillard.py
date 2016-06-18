@@ -210,6 +210,11 @@ def song(song_id):
 def load_schedule():
     # http://flask.pocoo.org/docs/0.11/patterns/fileuploads/
     # https://gist.github.com/DazWorrall/1779861
+    schedule_file = request.files.get('schedule')
+
+    if not schedule_file:
+        raise InvalidUsage('Schedule file not provided')
+
     return 'OK'
 
 def create_tables():
