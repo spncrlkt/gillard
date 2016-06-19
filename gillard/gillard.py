@@ -226,6 +226,12 @@ def load_schedule():
         except Exception as ex:
             raise InvalidUsage('Invalid JSON: {}'.format(ex))
 
+    for schedule_item in schedule_json:
+        show = Show(schedule_item['display_id'], schedule_item['password'])
+        db.session.add(show)
+
+    db.session.commit()
+
     return 'OK'
 
 def create_tables():

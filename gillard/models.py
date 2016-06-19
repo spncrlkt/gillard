@@ -16,10 +16,11 @@ class Show(db.Model):
     endDay = db.Column(db.Integer)
     endHour = db.Column(db.Integer)
 
-    def __init__(self, display_id, **kwargs):
+    def __init__(self, display_id, password, **kwargs):
         # auto-generate password && display_id hashes
         super(Show, self).__init__(**kwargs)
         self.display_id = display_id
+        self.password = password
 
 
 class Playlist(db.Model):

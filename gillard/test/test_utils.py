@@ -16,8 +16,7 @@ def save(session, record):
     return record
 
 def make_show(session, show_display_id='TESTID', password='TESTPW'):
-    show = Show(show_display_id)
-    show.password = password
+    show = Show(show_display_id, password)
     return save_and_refresh(session, show)
 
 def make_playlist(session, show=None, ):
