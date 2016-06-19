@@ -80,7 +80,7 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
         res_json = json.loads(rv.data.decode("utf-8"))
         assert res_json['message'] == 'Invalid JSON: Expecting value: line 1 column 1 (char 0)'
 
-    def test_schedule_upload_single_song(self):
+    def test_schedule_upload_single_show(self):
         show_list = self.get_show_list_single()
 
         rv = self.app.post(
@@ -96,7 +96,7 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
             show = gillard.db.session.query(Show).filter_by(id=1).one()
             assert show.display_id == show_list[0]['display_id']
 
-    def test_schedule_upload_2_songs(self):
+    def test_schedule_upload_2_shows(self):
         show_list = self.get_show_list_double()
 
         rv = self.app.post(
@@ -113,6 +113,23 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
             assert show.display_id == show_list[0]['display_id']
             show = gillard.db.session.query(Show).filter_by(id=2).one()
             assert show.display_id == show_list[1]['display_id']
+
+    def test_schedule_upload_(self):
+        show_list = self.get_show_list_single()
+
+        rv = self.app.post(
+            '/loadSchedule',
+            buffered=True,
+            content_type='multipart/form-data',
+            data={
+                'schedule' : (BytesIO(bytes(json.dumps(show_list), 'utf8')), 'schedule.json')
+            }
+        )
+
+        with gillard.app.app_context():
+            show = gillard.db.session.query(Show).filter_by(id=1).one()
+            assert show.display_id == show_list[0]['display_id']
+
 
     def get_show_list_single(self):
         return [{
