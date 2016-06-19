@@ -7,5 +7,6 @@ docker run \
   --rm \
   --link postgres:postgres \
   --name='test' \
+  -e "GILLARD_SETTINGS=gillard.cfg" \
   flask \
   run_tests.py
