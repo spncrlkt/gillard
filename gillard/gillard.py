@@ -227,7 +227,7 @@ def load_schedule():
             raise InvalidUsage('Invalid JSON: {}'.format(ex))
 
     for schedule_item in schedule_json:
-        show = Show(schedule_item['display_id'], schedule_item['password'])
+        show = Show(**schedule_item)
         db.session.add(show)
 
     db.session.commit()

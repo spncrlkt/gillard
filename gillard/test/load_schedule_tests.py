@@ -114,7 +114,7 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
             show = gillard.db.session.query(Show).filter_by(id=2).one()
             assert show.display_id == show_list[1]['display_id']
 
-    def test_schedule_upload_(self):
+    def test_schedule_upload_show_attrs(self):
         show_list = self.get_show_list_single()
 
         rv = self.app.post(
@@ -129,6 +129,12 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
         with gillard.app.app_context():
             show = gillard.db.session.query(Show).filter_by(id=1).one()
             assert show.display_id == show_list[0]['display_id']
+            assert show.password == show_list[0]['password']
+            assert show.title == show_list[0]['title']
+            assert show.startDay == show_list[0]['startDay']
+            assert show.startHour == show_list[0]['startHour']
+            assert show.endDay == show_list[0]['endDay']
+            assert show.endHour == show_list[0]['endHour']
 
 
     def get_show_list_single(self):
@@ -136,10 +142,10 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
             'display_id': '[KFFP59247]',
             'password': 'TESTPASS',
             'title': 'Based Goth Radio',
-            'startDay': '3',
-            'startHour': '12',
-            'endDay': '3',
-            'endHour': '14'
+            'startDay': 3,
+            'startHour': 12,
+            'endDay': 3,
+            'endHour': 14
         }]
 
     def get_show_list_double(self):

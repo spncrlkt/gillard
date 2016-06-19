@@ -21,6 +21,8 @@ class Show(db.Model):
         super(Show, self).__init__(**kwargs)
         self.display_id = display_id
         self.password = password
+        for key, value in kwargs.items():
+            self.key = value
 
 
 class Playlist(db.Model):
