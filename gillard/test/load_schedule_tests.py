@@ -63,3 +63,26 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
 
         res_json = json.loads(rv.data.decode("utf-8"))
         assert res_json['message'] == 'Invalid JSON: Expecting value: line 1 column 1 (char 0)'
+
+    def test_schedule_upload_single_song(self):
+        show_list = [{
+            'showID': '[KFFP59247]',
+            'title': 'Based Goth Radio',
+            'startDay': '3',
+            'startHour': '12',
+            'endDay': '3',
+            'endHour': '14'
+        }]
+        rv = self.app.post(
+            '/loadSchedule',
+            buffered=True,
+            content_type='multipart/form-data',
+            data={
+                'schedule' : (BytesIO(bytes(json.dumps(show_list), 'utf8')), 'schedule.json')
+            }
+        )
+
+        assert rv.status_code == 200
+
+
+
