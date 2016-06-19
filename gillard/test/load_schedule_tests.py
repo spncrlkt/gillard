@@ -96,6 +96,24 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
             show = gillard.db.session.query(Show).filter_by(id=1).one()
             assert show.display_id == show_list[0]['display_id']
 
+    def test_schedule_upload_2_songs(self):
+        show_list = self.get_show_list_double()
+
+        rv = self.app.post(
+            '/loadSchedule',
+            buffered=True,
+            content_type='multipart/form-data',
+            data={
+                'schedule' : (BytesIO(bytes(json.dumps(show_list), 'utf8')), 'schedule.json')
+            }
+        )
+
+        with gillard.app.app_context():
+            show = gillard.db.session.query(Show).filter_by(id=1).one()
+            assert show.display_id == show_list[0]['display_id']
+            show = gillard.db.session.query(Show).filter_by(id=2).one()
+            assert show.display_id == show_list[1]['display_id']
+
     def get_show_list_single(self):
         return [{
             'display_id': '[KFFP59247]',
@@ -108,7 +126,8 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
         }]
 
     def get_show_list_double(self):
-        return self.get_show_list_single().append({
+        show_list = self.get_show_list_single()
+        show_list.append({
             'display_id': '[KFFP59248]',
             'password': 'TESTPASSS',
             'title': 'Based Goth Radio 2',
@@ -117,4 +136,5 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
             'endDay': '3',
             'endHour': '16'
         })
+        return show_list
 
