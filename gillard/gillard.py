@@ -3,10 +3,12 @@ import traceback
 import inspect
 import os
 import json
+import requests
 from flask import Flask, jsonify, request, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.utils import secure_filename
+import spotipy
 
 from random import random
 import math
@@ -35,7 +37,6 @@ ALLOWED_EXTENSIONS = set(['json'])
 app.config.update(dict(
     SQLALCHEMY_DATABASE_URI='{}/dev'.format(db_uri),
     DEBUG=True,
-    SECRET_KEY="w!\x1c\xcd\xc5\x82\xdc'\xdd>\x1b,\xaf(\x9b\xc8\x80|k\x10<\x8fo\xaf",
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     UPLOAD_FOLDER=UPLOAD_FOLDER,
 ))
@@ -237,6 +238,18 @@ def load_schedule():
     db.session.commit()
 
     return 'OK'
+
+@app.route('/search', methods=['POST'])
+def search():
+    try:
+        search_json = request.get_json()
+    except Exception as ex:
+        raise InvalidUsage('Invalid JSON')
+
+    spotify = spotipy.Spotify()
+    search_term = search_json['search_term']
+    results = spotify.search(q=search_term, type='track,artist', limit=20)
+    return jsonify(results)
 
 def create_tables():
     db.create_all()
