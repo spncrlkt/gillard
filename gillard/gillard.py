@@ -226,9 +226,13 @@ def load_schedule():
         except Exception as ex:
             raise InvalidUsage('Invalid JSON: {}'.format(ex))
 
-    for schedule_item in schedule_json:
+    for idx, schedule_item in enumerate(schedule_json):
         show = Show(**schedule_item)
-        db.session.add(show)
+        missing_columns = show.missing_columns()
+        if not missing_columns:
+            db.session.add(show)
+        else:
+            raise InvalidUsage('Missing `{}` for schedule index {}'.format(missing_columns, idx))
 
     db.session.commit()
 

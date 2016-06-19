@@ -27,6 +27,7 @@ redo backend to nginx/gunicorn/flask/postgres stack
 - /song/:id - POST
 
 - /loadSchedule - post
+- test missing attrs
 
 - /search/:artist+:title - GET
 - /nowPlaying/:format - GET

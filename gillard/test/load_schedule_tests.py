@@ -136,6 +136,39 @@ class LoadScheduleTestCase(test_utils.GillardBaseTestCase):
             assert show.endDay == show_list[0]['endDay']
             assert show.endHour == show_list[0]['endHour']
 
+    def test_schedule_upload_show_missing_attr(self):
+        show_list = self.get_show_list_single()
+        del show_list[0]['title']
+
+        rv = self.app.post(
+            '/loadSchedule',
+            buffered=True,
+            content_type='multipart/form-data',
+            data={
+                'schedule' : (BytesIO(bytes(json.dumps(show_list), 'utf8')), 'schedule.json')
+            }
+        )
+
+        res_json = json.loads(rv.data.decode("utf-8"))
+        assert res_json['message'] == "Missing `['title']` for schedule index 0"
+
+    def test_schedule_upload_show_missing_attrs(self):
+        show_list = self.get_show_list_single()
+        del show_list[0]['title']
+        del show_list[0]['startHour']
+
+        rv = self.app.post(
+            '/loadSchedule',
+            buffered=True,
+            content_type='multipart/form-data',
+            data={
+                'schedule' : (BytesIO(bytes(json.dumps(show_list), 'utf8')), 'schedule.json')
+            }
+        )
+
+        res_json = json.loads(rv.data.decode("utf-8"))
+
+        assert res_json['message'] == "Missing `['title', 'startHour']` for schedule index 0"
 
     def get_show_list_single(self):
         return [{

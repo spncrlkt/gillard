@@ -1,9 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import inspect
 from sqlalchemy.orm import relationship
 import uuid
 import datetime
 
 from database import db
+from utils import eprint
 
 class Show(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,6 +25,19 @@ class Show(db.Model):
         self.password = password
         for key, value in kwargs.items():
             self.key = value
+
+    def missing_columns(self):
+        nullable_columns = ['playlists','id']
+        missing_columns = []
+        mapper = inspect(Show)
+        for column in mapper.attrs:
+            key = column.key
+            val = getattr(self,key)
+            if key not in nullable_columns and not val:
+                missing_columns.append(key)
+
+        return missing_columns
+
 
 
 class Playlist(db.Model):
